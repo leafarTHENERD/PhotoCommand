@@ -79,7 +79,7 @@ int main(){
 				colorir_linha_horizontal(bitmap, x1, x2, y1, c);
 				break;
 			case 'R':
-				scanf("%d %d %d %d %c", &x1, &x2, &y1, &y2, &c);
+				scanf("%d %d %d %d %c", &x1, &y1, &x2, &y2, &c);
 				desenhar_retangulo(bitmap, x1, x2, y1, y2, c);
 				break;
 			case 'S':
