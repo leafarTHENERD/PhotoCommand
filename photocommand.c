@@ -57,10 +57,11 @@ int main(){
 	int x1, x2, y1, y2;
 	char c;
 	do{
-		scanf("%c ", &command);
+		scanf("%c", &command);
 		switch(command){
 			case 'I':
 				scanf("%d %d ", &colunas, &linhas);
+				zero(bitmap);
 				break;
 			case 'Z':
 				zero(bitmap);
