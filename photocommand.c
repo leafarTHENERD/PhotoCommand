@@ -31,10 +31,9 @@ void colorir_linha_horizontal(char bitmap[MAX_LIN][MAX_COL], int x1, int x2, int
 }
 
 void desenhar_retangulo(char bitmap[MAX_LIN][MAX_COL], int x1, int x2, int y1, int y2, char c){
-	colorir_linha_horizontal(bitmap, x1,x2, y1, c);
-	colorir_linha_horizontal(bitmap, x1, x2, y2, c);
-	colorir_linha_vertical(bitmap, x1, y1, y2, c);
-	colorir_linha_vertical(bitmap, x2, y1, y2, c);
+	int i;
+	for(i = y1; i <= y2; i++)
+		colorir_linha_horizontal(bitmap, x1,x2, i, c);
 }
 
 void desenhar_bitmap(char bitmap[MAX_LIN][MAX_COL], char *nome, int lin, int col){
@@ -42,7 +41,7 @@ void desenhar_bitmap(char bitmap[MAX_LIN][MAX_COL], char *nome, int lin, int col
 	int i, j;
 	for(i = 0; i < lin; i++){
 		for(j = 0; j < col; j++)
-			printf("%c", bitmap[i][j]);
+			printf("%c", bitmap[j][i]);
 		printf("\n");
 	}
 		
