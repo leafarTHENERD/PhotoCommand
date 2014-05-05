@@ -87,7 +87,7 @@ int main(){
 	char c;
 	char command;
 	do{
-		scanf("%c", &command);
+		scanf(" %c", &command);
 		switch(command){
 			case 'I':
 				scanf("%d %d ", &bitmapAtual.colunas, &bitmapAtual.linhas);
