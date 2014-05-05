@@ -21,7 +21,7 @@ void zero(char dados[MAX_LIN][MAX_COL], int colunas, int linhas){
 }
 
 void colorir(char dados[MAX_LIN][MAX_COL], int x, int y, char cor, int colunas, int linhas){
-	if(x < colunas && y < linhas)
+	if(x <= colunas && y <= linhas)
 		dados[y-1][x-1] = cor;
 }
 
