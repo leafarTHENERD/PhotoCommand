@@ -1,0 +1,27 @@
+# test2.test
+I 40 11
+S test2.bmp
+F
+
+H 7 9 1 _
+H 19 21 1 _
+H 33 35 1 _
+C 6 2 /
+C 9 2 /
+C 10 2 \
+C 18 2 /
+H 19 20 2 _
+
+
+test2.bmp
+OOOOOO___OOOOOOOOO___OOOOOOOOOOO___OOOOO
+OOOOO/OO/\OOOOOOO/__/\OOOOOOOOO/__/\OOOO
+OOOO/OO/:/_OOOOOO\OO\:\OOOOOOOO\OO\:\OOO
+OOO/OO/:/O/\OOOOOO\OO\:\OOOOOOOO\OO\:\OO
+OO/OO/:/O/:/OO___OO\OO\:\OOO_____\__\:\O
+O/__/:/O/:/OO/__/\OO\__\:\O/__/::::::::\
+O\OO\:\/:/OOO\OO\:\O/OO/:/O\OO\:\~~\~~\/
+OO\OO\::/OOOOO\OO\:\OO/:/OOO\OO\:\OO~~~O
+OOO\OO\:\OOOOOO\OO\:\/:/OOOOO\OO\:\OOOOO
+OOOO\OO\:\OOOOOO\OO\::/OOOOOOO\OO\:\OOOO
+OOOOO\__\/OOOOOOO\__\/OOOOOOOOO\__\/OOOO
