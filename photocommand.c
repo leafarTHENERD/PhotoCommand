@@ -21,8 +21,8 @@ void zero(char dados[MAX_LIN][MAX_COL], int colunas, int linhas){
 }
 
 void colorir(char dados[MAX_LIN][MAX_COL], int x, int y, char cor, int colunas, int linhas){
-	if(x < linhas && y < colunas)
-		dados[x-1][y-1] = cor;
+	if(x < colunas && y < linhas)
+		dados[y-1][x-1] = cor;
 }
 
 void colorir_linha_vertical(char dados[MAX_LIN][MAX_COL], int x, int y1, int y2, char c, int colunas, int linhas){
@@ -70,22 +70,22 @@ void desenhar_bitmap(bitmap bitmapsSalvos[MAX_BITMAPS], int numBitmaps){
 		int i, j;
 		for(i = 0; i < atual.linhas; i++){
 			for(j = 0; j < atual.colunas; j++)
-				printf("%c", atual.dados[j][i]);
+				printf("%c", atual.dados[i][j]);
 			printf("\n");
-		}	
+		}
 	}
 }
 
 int main(){
 	bitmap bitmapAtual;
 	bitmapAtual.nome[0] = '\0';
-	char command;
 
 	bitmap bitmapsSalvos[MAX_BITMAPS];
 	int numBitmaps = 0;
 
 	int x1, x2, y1, y2;
 	char c;
+	char command;
 	do{
 		scanf("%c", &command);
 		switch(command){
