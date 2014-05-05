@@ -121,6 +121,8 @@ int main(){
 			case 'F':
 				desenhar_bitmap(bitmapsSalvos, numBitmaps);
 				break;
+			default:
+				for(;getchar()!='\n';);
 		}
 	}
 	while( command != 'F');
