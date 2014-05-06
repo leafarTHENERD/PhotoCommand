@@ -86,43 +86,51 @@ int main(){
 	int x1, x2, y1, y2;
 	char c;
 	char command;
+
+	int primeiro_comando = 1;
+
 	do{
 		scanf(" %c", &command);
-		switch(command){
-			case 'I':
-				scanf("%d %d ", &bitmapAtual.colunas, &bitmapAtual.linhas);
-				zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'Z':
-				zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'C':
-				scanf("%d %d %c", &x1, &y1, &c);
-				colorir(bitmapAtual.dados, x1, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'V':
-				scanf("%d %d %d %c", &x1, &y1, &y2, &c);
-				colorir_linha_vertical(bitmapAtual.dados, x1, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'H':
-				scanf("%d %d %d %c", &x1, &x2, &y1, &c);
-				colorir_linha_horizontal(bitmapAtual.dados, x1, x2, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'R':
-				scanf("%d %d %d %d %c", &x1, &y1, &x2, &y2, &c);
-				desenhar_retangulo(bitmapAtual.dados, x1, x2, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
-				break;
-			case 'S':
-				scanf("%12s", bitmapAtual.nome);
-				bitmapsSalvos[numBitmaps] = bitmapAtual;
-				numBitmaps++;
-				bitmapAtual.nome[0] = '\0';
-				break;
-			case 'F':
-				desenhar_bitmap(bitmapsSalvos, numBitmaps);
-				break;
-			default:
-				for(;getchar()!='\n';);
+		if(command == 'I' || command == 'F')
+			primeiro_comando = 0;
+
+		if(!primeiro_comando){
+			switch(command){
+				case 'I':
+					scanf("%d %d ", &bitmapAtual.colunas, &bitmapAtual.linhas);
+					zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'Z':
+					zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'C':
+					scanf("%d %d %c", &x1, &y1, &c);
+					colorir(bitmapAtual.dados, x1, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'V':
+					scanf("%d %d %d %c", &x1, &y1, &y2, &c);
+					colorir_linha_vertical(bitmapAtual.dados, x1, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'H':
+					scanf("%d %d %d %c", &x1, &x2, &y1, &c);
+					colorir_linha_horizontal(bitmapAtual.dados, x1, x2, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'R':
+					scanf("%d %d %d %d %c", &x1, &y1, &x2, &y2, &c);
+					desenhar_retangulo(bitmapAtual.dados, x1, x2, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					break;
+				case 'S':
+					scanf("%12s", bitmapAtual.nome);
+					bitmapsSalvos[numBitmaps] = bitmapAtual;
+					numBitmaps++;
+					bitmapAtual.nome[0] = '\0';
+					break;
+				case 'F':
+					desenhar_bitmap(bitmapsSalvos, numBitmaps);
+					break;
+				default:
+					for(;getchar()!='\n';);
+			}
 		}
 	}
 	while( command != 'F');
