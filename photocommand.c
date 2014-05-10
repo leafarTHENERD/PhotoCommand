@@ -13,19 +13,19 @@ struct bitmap{
 };
 typedef struct bitmap bitmap;
 
-void zero(char dados[MAX_LIN][MAX_COL], int colunas, int linhas){
+void zero(bitmap bp, char dados[MAX_LIN][MAX_COL]){
 	int i, j;
-	for(i = 0; i < linhas; i++)
-		for(j = 0; j < colunas; j++)
+	for(i = 0; i < bp.linhas; i++)
+		for(j = 0; j < bp.colunas; j++)
 			dados[i][j] = 'O';
 }
 
-void colorir(char dados[MAX_LIN][MAX_COL], int x, int y, char cor, int colunas, int linhas){
-	if(x <= colunas && y <= linhas)
+void colorir(bitmap bp, char dados[MAX_LIN][MAX_COL], int x, int y, char cor){
+	if(x <= bp.colunas && y <= bp.linhas)
 		dados[y-1][x-1] = cor;
 }
 
-void colorir_linha_vertical(char dados[MAX_LIN][MAX_COL], int x, int y1, int y2, char c, int colunas, int linhas){
+void colorir_linha_vertical(bitmap bp, char dados[MAX_LIN][MAX_COL], int x, int y1, int y2, char c){
 	int j;
 	// corrigindo linhas com coordenadas invertidas (y2 < y1)
 	if(y1 > y2){
@@ -34,10 +34,10 @@ void colorir_linha_vertical(char dados[MAX_LIN][MAX_COL], int x, int y1, int y2,
 		y1 = aux;
 	}
 	for(j = y1; j <= y2; j++)
-		colorir(dados, x, j, c, colunas, linhas);
+		colorir(bp, dados, x, j, c);
 }
 
-void colorir_linha_horizontal(char dados[MAX_LIN][MAX_COL], int x1, int x2, int y, char c, int colunas, int linhas){
+void colorir_linha_horizontal(bitmap bp, char dados[MAX_LIN][MAX_COL], int x1, int x2, int y, char c){
 	int i;
 	// corrigindo linhas com coordenadas invertidas (x2 < x1)
 	if(x1 > x2){
@@ -46,10 +46,10 @@ void colorir_linha_horizontal(char dados[MAX_LIN][MAX_COL], int x1, int x2, int 
 		x1 = aux;
 	}
 	for(i = x1; i <= x2; i++)
-		colorir(dados, i, y, c, colunas, linhas);
+		colorir(bp, dados, i, y, c);
 }
 
-void desenhar_retangulo(char dados[MAX_LIN][MAX_COL], int x1, int x2, int y1, int y2, char c, int colunas, int linhas){
+void desenhar_retangulo(bitmap bp, char dados[MAX_LIN][MAX_COL], int x1, int x2, int y1, int y2, char c){
 	int i;
 	// corrigindo retangulos com coordenadas invertidas (y2 < y1)
 	// x2 < x1 é corrigido na funcao colorir_linha_horizontal
@@ -59,7 +59,7 @@ void desenhar_retangulo(char dados[MAX_LIN][MAX_COL], int x1, int x2, int y1, in
 		y1 = aux;
 	}
 	for(i = y1; i <= y2; i++)
-		colorir_linha_horizontal(dados, x1,x2, i, c, colunas, linhas);
+		colorir_linha_horizontal(bp, dados, x1,x2, i, c);
 }
 
 void desenhar_bitmap(bitmap bitmapsSalvos[MAX_BITMAPS], int numBitmaps){
@@ -98,26 +98,26 @@ int main(){
 			switch(command){
 				case 'I':
 					scanf("%d %d ", &bitmapAtual.colunas, &bitmapAtual.linhas);
-					zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
+					zero(bitmapAtual, bitmapAtual.dados);
 					break;
 				case 'Z':
-					zero(bitmapAtual.dados, bitmapAtual.colunas, bitmapAtual.linhas);
+					zero(bitmapAtual, bitmapAtual.dados);
 					break;
 				case 'C':
 					scanf("%d %d %c", &x1, &y1, &c);
-					colorir(bitmapAtual.dados, x1, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					colorir(bitmapAtual, bitmapAtual.dados, x1, y1, c);
 					break;
 				case 'V':
 					scanf("%d %d %d %c", &x1, &y1, &y2, &c);
-					colorir_linha_vertical(bitmapAtual.dados, x1, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					colorir_linha_vertical(bitmapAtual, bitmapAtual.dados, x1, y1, y2, c);
 					break;
 				case 'H':
 					scanf("%d %d %d %c", &x1, &x2, &y1, &c);
-					colorir_linha_horizontal(bitmapAtual.dados, x1, x2, y1, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					colorir_linha_horizontal(bitmapAtual, bitmapAtual.dados, x1, x2, y1, c);
 					break;
 				case 'R':
 					scanf("%d %d %d %d %c", &x1, &y1, &x2, &y2, &c);
-					desenhar_retangulo(bitmapAtual.dados, x1, x2, y1, y2, c, bitmapAtual.colunas, bitmapAtual.linhas);
+					desenhar_retangulo(bitmapAtual, bitmapAtual.dados, x1, x2, y1, y2, c);
 					break;
 				case 'S':
 					scanf("%12s", bitmapAtual.nome);
