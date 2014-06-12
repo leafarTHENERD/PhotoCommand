@@ -18,30 +18,30 @@ struct bitmap{
 };
 typedef struct bitmap bitmap;
 
-bitmap inicializar(int linhas, int colunas){
+bitmap inicializar_bitmap(int linhas, int colunas){
     BITMAPFILEHEADER bf;
     BITMAPINFOHEADER bi;
     bitmap bmp;
 
 
-    bi.biSize != 40; 
+    bi.biSize = 40; 
     bi.biWidth = colunas;
     bi.biHeight = linhas;
     bi.biPlanes = 1; 
-    bi.biBitCount != 24;
-    bi.biCompression != 0;
+    bi.biBitCount = 24;
+    bi.biCompression = 0;
     int padding =  (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
     bi.biSizeImage = abs(bi.biHeight) * ((bi.biWidth * sizeof (RGBTRIPLE)) + padding);
-    bi.biXPelsPerMeter = 1360; 
-    bi.biYPelsPerMeter = 768; 
+    bi.biXPelsPerMeter = 0x130B; 
+    bi.biYPelsPerMeter = 0x130B; 
     bi.biClrUsed = 0; 
     bi.biClrImportant = 0;
 
-    bf.bfType != 0x4d42;
+    bf.bfType = 0x4d42;
     bf.bfSize = bi.biSizeImage + sizeof (BITMAPFILEHEADER) + sizeof (BITMAPINFOHEADER);
     bf.bfReserved1 = 0; // Reserved; must be zero.
     bf.bfReserved2 = 0; // Reserved; must be zero.
-    bf.bfOffBits != 54;
+    bf.bfOffBits = 54;
 
     bmp.bi = bi;
     bmp.bf = bf;
@@ -64,23 +64,23 @@ RGBTRIPLE cor(BYTE blue, BYTE green, BYTE red){
 
 }
 
-void colorir(bitmap bmp, int x, int y, RGBTRIPLE triple){
-    if(x <= bmp.bi.biWidth && y <= bmp.bi.biHeight)
-        bmp.dados[y-1][x-1] = triple;
+void colorir(bitmap *bmp, int x, int y, RGBTRIPLE triple){
+    if(x <= bmp->bi.biWidth && y <= bmp->bi.biHeight)
+        bmp->dados[y-1][x-1] = triple;
 }
 
-void zero(bitmap bmp){
+void zero(bitmap *bmp){
     int i, j, biHeight;
-    for (i = 0, biHeight = abs(bmp.bi.biHeight); i < biHeight; i++){
+    for (i = 1, biHeight = abs(bmp->bi.biHeight); i <= biHeight; i++){
         // iterate over pixels in scanline
-        for (j = 0; j < bmp.bi.biWidth; j++){
+        for (j = 1; j <= bmp->bi.biWidth; j++){
             colorir(bmp, i, j, cor(0xFF, 0xFF, 0xFF));
         }
     }
 
 }
 
-void colorir_linha_vertical(bitmap bmp, int x, int y1, int y2, char c){
+void colorir_linha_vertical(bitmap *bmp, int x, int y1, int y2, char c){
     int j;
     // corrigindo linhas com coordenadas invertidas (y2 < y1)
     if(y1 > y2){
@@ -93,7 +93,7 @@ void colorir_linha_vertical(bitmap bmp, int x, int y1, int y2, char c){
         colorir(bmp, x, j, triple);
 }
 
-void colorir_linha_horizontal(bitmap bmp, int x1, int x2, int y, char c){
+void colorir_linha_horizontal(bitmap *bmp, int x1, int x2, int y, char c){
     int i;
     // corrigindo linhas com coordenadas invertidas (x2 < x1)
     if(x1 > x2){
@@ -106,7 +106,7 @@ void colorir_linha_horizontal(bitmap bmp, int x1, int x2, int y, char c){
         colorir(bmp, i, y, triple);
 }
 
-void desenhar_retangulo(bitmap bmp, int x1, int x2, int y1, int y2, char c){
+void desenhar_retangulo(bitmap *bmp, int x1, int x2, int y1, int y2, char c){
     int i;
     // corrigindo retangulos com coordenadas invertidas (y2 < y1)
     // x2 < x1 é corrigido na funcao colorir_linha_horizontal
@@ -117,6 +117,43 @@ void desenhar_retangulo(bitmap bmp, int x1, int x2, int y1, int y2, char c){
     }
     for(i = y1; i <= y2; i++)
         colorir_linha_horizontal(bmp, x1,x2, i, c);
+}
+
+void salvar_bitmap(bitmap bmp){
+    FILE *outptr;
+
+    outptr = fopen(bmp.nome, "wb");
+    if(outptr == NULL){
+        perror("Nao foi possivel salvar a imagem.\n");
+        return;
+    }
+
+    // write outfile's BITMAPFILEHEADER
+    fwrite(&bmp.bf, sizeof(BITMAPFILEHEADER), 1, outptr);
+
+    // write outfile's BITMAPINFOHEADER
+    fwrite(&bmp.bi, sizeof(BITMAPINFOHEADER), 1, outptr);
+
+    // iterate over infile's scanlines
+    int i, j, k, biHeight;
+    for (i = 0, biHeight = abs(bmp.bi.biHeight); i < biHeight; i++)
+    {
+        // iterate over pixels in scanline
+        for (j = 0; j < bmp.bi.biWidth; j++)
+        {
+            // temporary storage
+            RGBTRIPLE triple = bmp.dados[i][j];
+
+            // write RGB triple to outfile
+            fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+        }
+
+        // then add it back (to demonstrate how)
+        for (k = 0; k < bmp.padding; k++)
+            fputc(0x00, outptr);
+    }
+
+    fclose(outptr);
 }
 
 int main(){
@@ -143,30 +180,31 @@ int main(){
                 case 'I':
                     
                     scanf("%d %d ", &colunas, &linhas);
-                    bitmapAtual = inicializar(linhas, colunas);
-                    zero(bitmapAtual);
+                    bitmapAtual = inicializar_bitmap(linhas, colunas);
+                    zero(&bitmapAtual);
                     break;
                 case 'Z':
-                    zero(bitmapAtual);
+                    zero(&bitmapAtual);
                     break;
                 case 'C':
                     scanf("%d %d %c", &x1, &y1, &c);
-                    colorir(bitmapAtual, x1, y1, cor((BYTE)c,(BYTE)c,(BYTE)c) );
+                    colorir(&bitmapAtual, x1, y1, cor((BYTE)c,(BYTE)c,(BYTE)c) );
                     break;
                 case 'V':
                     scanf("%d %d %d %c", &x1, &y1, &y2, &c);
-                    colorir_linha_vertical(bitmapAtual, x1, y1, y2, c);
+                    colorir_linha_vertical(&bitmapAtual, x1, y1, y2, c);
                     break;
                 case 'H':
                     scanf("%d %d %d %c", &x1, &x2, &y1, &c);
-                    colorir_linha_horizontal(bitmapAtual, x1, x2, y1, c);
+                    colorir_linha_horizontal(&bitmapAtual, x1, x2, y1, c);
                     break;
                 case 'R':
                     scanf("%d %d %d %d %c", &x1, &y1, &x2, &y2, &c);
-                    desenhar_retangulo(bitmapAtual, x1, x2, y1, y2, c);
+                    desenhar_retangulo(&bitmapAtual, x1, x2, y1, y2, c);
                     break;
                 case 'S':
                     scanf("%12s", bitmapAtual.nome);
+                    salvar_bitmap(bitmapAtual);
                     bitmapsSalvos[numBitmaps] = bitmapAtual;
                     numBitmaps++;
                     bitmapAtual.nome[0] = '\0';
